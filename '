@@ -1,0 +1,52 @@
+import React, { Component } from 'react';
+import Todo from './Todo';
+import NewTodoForm from './NewTodoForm';
+
+class TodoList extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {todos: []};
+        this.addTodo = this.addTodo.bind(this);
+        this.updateTodo = this.updateTodo.bind(this);
+        this.deleteTodo = this.deleteTodo.bind(this);
+    }
+
+    addTodo(todo){
+        this.setState({todos: [...this.state.todos, todo});
+    }
+
+    updateTodo(uuid, text){
+        let todos = [...this.state.todos];
+        let index = todos.findIndex(todo => todo.uuid === uuid); 
+        todos[index]['text'] = text;
+        this.setState({todos: todos});
+    }
+
+    deleteTodo(uuid){
+        let todos = [...this.state.todos];
+        let index = todos.findIndex(todo => todo.uuid === uuid); 
+        todos.splice(index, 1);
+        this.setState({todos: todos});
+    }
+
+    render() {
+        return (
+            <div className="TodoList">
+                <NewTodoForm addTodo={this.addTodo}/>
+                {
+                    this.state.todos.map(todo => {
+                        return <Todo 
+                                    key={todo.uuid} 
+                                    uuid={todo.uuid} 
+                                    intlText={todo.text} 
+                                    updateTodo={this.updateTodo}
+                                    deleteTodo={this.deleteTodo}
+                            />;
+                    })
+                }
+            </div>
+        );
+    }
+}
+
+export default TodoList;
